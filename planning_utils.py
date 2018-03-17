@@ -93,10 +93,11 @@ def a_star(grid, h, start, goal):
     Given a grid and heuristic function returns
     the lowest cost path from start to goal.
     """
-
+    print('start a-star search')
     path = []
     path_cost = 0
     queue = PriorityQueue()
+    print('queue : ', queue)
     queue.put((0, start))
     visited = set(start)
 
@@ -104,7 +105,9 @@ def a_star(grid, h, start, goal):
     found = False
 
     while not queue.empty():
+        print('queue is not empty')
         item = queue.get()
+        print('item on queue: ', item)
         current_cost = item[0]
         current_node = item[1]
 

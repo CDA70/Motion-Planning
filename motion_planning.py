@@ -140,7 +140,7 @@ class MotionPlanning(Drone):
         #----------------------------------------------------------------------------
         # CDA: CURRENT POSITION
         # TODO: retrieve current global position
-        current_global_position = [self._longitude, self._latitide, self._altitude]
+        current_global_position = [self._longitude, self._latitude, self._altitude]
         print('curent global position: ', current_global_position)
         # TODO: convert to current local position using global_to_local()
         current_local_position = global_to_local(current_global_position,self.global_home)
@@ -175,16 +175,16 @@ class MotionPlanning(Drone):
         # Set goal as some arbitrary position on the grid
         # grid_goal = (-north_offset + 10, -east_offset + 10)
         # TODO: adapt to set goal as latitude / longitude position and convert
-        goal_lat = float(37.796874)
-        goal_lon = float(-122.399683)
+        #goal_lat = float(37.796874)
+        goal_lat = float(37.793515)
+        #goal_lon = float(-122.399683)
+        goal_lon = float(-122.397632)
         goal = [goal_lon, goal_lat, self.global_home[2]]
         goal_position = global_to_local(goal, self.global_home)
         grid_goal = (int(goal_position[0] + north_offset), int(goal_position[1] + east_offset))
 
         # CDA: END START POINT
         #----------------------------------------------------------------------------
-
-
 
         # Run A* to find a path from start to goal
         # TODO: add diagonal motions with a cost of sqrt(2) to your A* implementation
