@@ -21,22 +21,17 @@ In the starter code, we assume that the home position is where the drone first i
 - Read first line of the colliders,csv file and extract lat0, lon0 as floating point values. 
 
        `with open(colliders_file) as f:
-       
             latlon = f.readline().strip().split(',')
-            
             lat0 = float(latlon[0].strip().strip('lat0'))
-            
             lon0 = float(latlon[1].strip().strip('lon0'))`
             
-- set global home ==> `self.set_home_position(lat0, lon0, 0)
+- set global home ==> `self.set_home_position(lat0, lon0, 0)`
 
 ## Retrieve current position
 In the starter code, we assume the drone takes off from map center, but you'll need to be able to takeoff from anywhere. Retrieve your current position in geodetic coordinates from 
 
 `self._latitude` 
-
 `self._longitude` 
-
 `self._altitude`
 
 Then use the utility function `global_to_local()` to convert to local position (using `self.global_home` as well, which you just set)
