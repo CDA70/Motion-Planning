@@ -137,12 +137,20 @@ class MotionPlanning(Drone):
         # CDA: END HOME POSITION
         #----------------------------------------------------------------------------
 
+        #----------------------------------------------------------------------------
+        # CDA: CURRENT POSITION
         # TODO: retrieve current global position
- 
+        current_global_position = [self._longitude, self._latitide, self._altitude]
+        print('curent global position: ', current_global_position)
         # TODO: convert to current local position using global_to_local()
-        
+        current_local_position = global_to_local(current_global_position,self.global_home)
+        print('current local position: ', current_local_position)
+
         print('global home {0}, position {1}, local position {2}'.format(self.global_home, self.global_position,
                                                                          self.local_position))
+        # CDA: END CURRENT POSITION
+        #----------------------------------------------------------------------------
+
         # Read in obstacle map
         data = np.loadtxt('colliders.csv', delimiter=',', dtype='Float64', skiprows=2)
         
