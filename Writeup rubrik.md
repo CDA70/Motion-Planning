@@ -10,14 +10,8 @@ Test that motion_planning.py is a modified version of backyard_flyer_solution.py
 
 - The enumeration states are different, the motion planning provides one additional state, namely, PLANNING and all states have the value auto() instead of a default number. auto() means that an exact value is unimportant. 
 
-The phases in backyard-flyer are handled as follows:
+The video "Phases of Flight" explains the phases (states) in a comprehensive way. I hope that the image is an attempt to explain the difference between the backyard-flyer and the motion_planner. The biggest difference can be found with the extra state, PLANNING, where we do not fly in a hard coded box, but instead planning a flight by calling the function plan_path:
 ![planning phases](./misc/states/states.png)
-
-
-
-The initialization and callback is basically the same, except for calling the  method ==> plan_path() , set during the state: ARMING...
-
-In our new version and after the state is set to ARMING, the method plan_path is executed and it's exactly here where the magic happens. In the previous version, the backyard flyer solution, the path was hardcoded by defining a box and in the new version, the path is actually planned. 
 
 As first the lat long is rad from the collider file and converted into floating point value. Further the values are set as a home position and convert to global position and back to loacl position.
 
