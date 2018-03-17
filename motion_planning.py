@@ -119,6 +119,9 @@ class MotionPlanning(Drone):
 
         self.target_position[2] = TARGET_ALTITUDE
 
+        """ ----------------------------------------------------------------------------
+            CDA: HOME POSITION
+            ----------------------------------------------------------------------------"""           
         # TODO: read lat0, lon0 from colliders into floating point values
         # Open coliders.csv and read lat0 and lon0
         colliders_file = 'colliders.csv'
@@ -127,13 +130,25 @@ class MotionPlanning(Drone):
             latlon = f.readline().strip().split(',')
             lat0 = float(latlon[0].strip().strip('lat0'))
             lon0 = float(latlon[1].strip().strip('lon0'))
+            print('lat0 : ', lat0)
+            print('lon0 : ', lon0)
             
         # TODO: set home position to (lat0, lon0, 0)
         self.set_home_position(lat0, lon0, 0)
-
+        
+        """ ----------------------------------------------------------------------------
+            CDA: RETRIEVE CURRENT POSITION
+            ----------------------------------------------------------------------------"""    
         # TODO: retrieve current global position
- 
+        # retrieve from drone.py, _latitude, _longitude, _altitude 
+        # the order I used is lon lat and is because it's the order used by the 
+        # package utm, where function from_latlon is called
+        global_position = [self._longitude, self._latitude, self.altitude]
+        print('global Position : ', global_position)
+        
         # TODO: convert to current local position using global_to_local()
+        current_local_position = global_to_local(global_position,self.global_home)
+        print('current local postion : ', current_local_position)
         
         print('global home {0}, position {1}, local position {2}'.format(self.global_home, self.global_position,
                                                                          self.local_position))
