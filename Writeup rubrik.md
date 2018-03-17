@@ -6,12 +6,12 @@ The writeup is an explanation of code changes and answers to Rubrik Questions to
 Test that motion_planning.py is a modified version of backyard_flyer_solution.py for simple path planning. Verify that both scripts work. Then, compare them side by side and describe in words how each of the modifications implemented in motion_planning.py is functioning.
 
 ### Answer to Question 1:     
-- To start with. There are few more imports of packages in the new motion_planning, especially the planning_utils is interesting. It provides the a_star and heuristic function, and is used in the Motion_planning as to plan a path
+- To start with. There are few more imports of packages in the new motion_planning, especially the planning_utils is useful as it provides the a_star and heuristic function used in the Motion_planning as to plan a path
 
 - The enumeration states are different, the motion planning provides one additional state, namely, PLANNING and all states have the value auto() instead of a default number. auto() means that an exact value is unimportant. 
 
 The phases in backyard-flyer are handled as follows:
-1. MANUAL --> ARMING --> TAKEOFF --> 
+![planning phases](./misc/states/states.png)
 
 
 
