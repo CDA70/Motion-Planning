@@ -157,13 +157,34 @@ class MotionPlanning(Drone):
         # Define a grid for a particular altitude and safety margin around obstacles
         grid, north_offset, east_offset = create_grid(data, TARGET_ALTITUDE, SAFETY_DISTANCE)
         print("North offset = {0}, east offset = {1}".format(north_offset, east_offset))
-        # Define starting point on the grid (this is just grid center)
-        grid_start = (-north_offset, -east_offset)
-        # TODO: convert start position to current position rather than map center
         
+        #----------------------------------------------------------------------------
+        # CDA: START POINT
+        # Define starting point on the grid (this is just grid center)
+        # grid_start = (-north_offset, -east_offset)
+        # TODO: convert start position to current position rather than map center
+        north_start = int(current_local_position[0] + north_offset)
+        east_start = int(current_local_position[1] + east_offset)
+        grid_start = (-north_offset, -east_offset)
+
+        # CDA: END START POINT
+        #----------------------------------------------------------------------------
+        
+        #----------------------------------------------------------------------------
+        # CDA: SET GOAL POINT
         # Set goal as some arbitrary position on the grid
-        grid_goal = (-north_offset + 10, -east_offset + 10)
+        # grid_goal = (-north_offset + 10, -east_offset + 10)
         # TODO: adapt to set goal as latitude / longitude position and convert
+        goal_lat = float(37.796874)
+        goal_lon = float(-122.399683)
+        goal = [goal_lon, goal_lat, self.global_home[2]]
+        goal_position = global_to_local(goal, self.global_home)
+        grid_goal = (int(goal_position[0] + north_offset), int(goal_position[1] + east_offset))
+
+        # CDA: END START POINT
+        #----------------------------------------------------------------------------
+
+
 
         # Run A* to find a path from start to goal
         # TODO: add diagonal motions with a cost of sqrt(2) to your A* implementation

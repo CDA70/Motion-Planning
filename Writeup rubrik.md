@@ -49,5 +49,28 @@ Determine the local position relative to global home
 3. create a local position from global and home positions
         `local_position = numpy.array([north - north_home, east - east_home, -global_position[2]])`
         
-        
+## change start point
+In the starter code, the start point for planning is hardcoded as map center. Change this to be your current local position.
 
+### Answer: start point
+The previous rubrik retrieved the current position. Therefore the north start point = current_local_position - north_offset, 
+and the east start point = current_local_position - east_offset
+    `north_start = current_local_position[0] - north_offset`
+    `east_start = current_local_position[1] - east_offset`
+    `grid_start = (north_offset, east_offset)`     
+
+
+## Set goal position
+In the starter code, the goal position is hardcoded as some location 10 m north and 10 m east of map center. Modify this to be set as some arbitrary position on the grid given any geodetic coordinates (latitude, longitude)
+
+### Answer: Set goal Position
+The goal can be any lat, lon within the map and have it rendered to a goal location on the grid.
+
+1. set latitude,   `goal_lat = float(37.796874)`
+2. set longitude,  `goal_lon = float(-122.399683)`
+3. set the altitide to the altitude of the global home with the defined latitude and longitude
+                   `goal = [goal_lon, goal_lat, self.global_home[2]]`
+4. convert the global goal position to the local goal position by calling the function global_to_local()
+        `goal_position = global_to_local(goal, self.global_home)`
+5. and finally set the grid_goal with the offset included
+        `grid_goal = (int(goal_position[0] + north_offset), int(goal_position[1] + east_offset))`
