@@ -1,17 +1,17 @@
-TEST Writeup
+# RUBRIC Writeup
 
-The entire writeup is a result of trying to implement the FCND Project Motion Planning. the initial format is purely text.
+The writeup is an explanation of code changes and answers to Rubrik Questions to implement the FCND project, Motion Planning. 
 
-Question 1. Explain the starter code. Test that motion_planning.py is a modified version of backyard_flyer_solution.py for simple path planning. Verify that both scripts work. Then, compare them side by side and describe in words how each of the modifications implemented in motion_planning.py is functioning.
+## Question 1. Explain the starter code. 
+Test that motion_planning.py is a modified version of backyard_flyer_solution.py for simple path planning. Verify that both scripts work. Then, compare them side by side and describe in words how each of the modifications implemented in motion_planning.py is functioning.
 
-Answer 1:  
-- To start with. There are few more imports of packages in the new motion_planning, especially the planning_utils is interesting. It provides the a_star and heuristic function.
+### Answer to Question 1:     
+- To start with. There are few more imports of packages in the new motion_planning, especially the planning_utils is useful as it provides the a_star and heuristic function used in the Motion_planning as to plan a path
 
-- Looking at the enumeration states, the motion planning provides one additional state, namely, PLANNING and all states have the value aut() instead of a default number. auto() means that an exact value is unimportant. 
+- The enumeration states are different, the motion planning provides one additional state, namely, PLANNING and all states have the value auto() instead of a default number. auto() means that an exact value is unimportant. 
 
-The initialization and callback is basically the same, except for calling the  method ==> plan_path() , set during the state: ARMING...
-
-In our new version and after the state is set to ARMING, the method plan_path is executed and it's exactly here where the magic happens. In the previous version, the backyard flyer solution, the path was hardcoded by defining a box and in the new version, the path is actually planned. 
+The video "Phases of Flight" explains the phases (states) in a comprehensive way. I hope that the image is an attempt to explain the difference between the backyard-flyer and the motion_planner. The biggest difference can be found with the extra state, PLANNING, where we do not fly in a hard coded box, but instead planning a flight by calling the function plan_path:
+![planning phases](./misc/states/states.png)
 
 As first the lat long is rad from the collider file and converted into floating point value. Further the values are set as a home position and convert to global position and back to loacl position.
 
