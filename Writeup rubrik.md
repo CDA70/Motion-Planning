@@ -38,3 +38,16 @@ Then use the utility function `global_to_local()` to convert to local position (
 
 ### Answer: Retrieve current position
 Determine the local position relative to global home
+`global_to Local()` is a function you can find in frame_utils.py (udacidrone)
+
+1. get easting and northing of global home
+        `(east_home, north_home, _, _) = utm.from_latlon(self.global_home[1],self.global_home[0])`
+        
+2. get easting and northing of global position
+        `(east, north, _, _) = utm.from_latlon(global_position[1],global_position[0])`
+        
+3. create a local position from global and home positions
+        `local_position = numpy.array([north - north_home, east - east_home, -global_position[2]])`
+        
+        
+
