@@ -3,7 +3,7 @@
 The writeup is an explanation of code changes and answers to Rubrik Questions to implement the FCND project, Motion Planning. 
 
 #### 1. Explain the starter code.
-Test that motion_planning.py is a modified version of backyard_flyer_solution.py for simple path planning. Verify that both scripts work. Then, compare them side by side and describe in words how each of the modifications implemented in motion_planning.py is functioning.
+_Test that motion_planning.py is a modified version of backyard_flyer_solution.py for simple path planning. Verify that both scripts work. Then, compare them side by side and describe in words how each of the modifications implemented in motion_planning.py is functioning._
 
 #### Answer:     
 - To start with, a few more packages are imported in the new motion_planning, especially the planning_utils is useful as it provides the a_star and heuristic function used in the Motion_planning as to plan a path
@@ -16,7 +16,7 @@ The video "Phases of Flight" is an comprehensoive explanation of different fligh
 
 #### 2. Implementing your planning Algorithm
 #### Home Position
-In the starter code, we assume that the home position is where the drone first initializes, but in reality you need to be able to start planning from anywhere. Modify your code to read the global home location from the first line of the colliders.csv file and set that position as global home (self.set_home_position())
+_In the starter code, we assume that the home position is where the drone first initializes, but in reality you need to be able to start planning from anywhere. Modify your code to read the global home location from the first line of the colliders.csv file and set that position as global home (self.set_home_position())_
 
 #### Answer: Home Position
 - Read first line of the colliders,csv file and extract lat0, lon0 as floating point values. 
@@ -32,13 +32,13 @@ Although the first line is split in a LAT LON, the float seems to truncate the l
 
 
 #### Retrieve current position
-In the starter code, we assume the drone takes off from map center, but you'll need to be able to takeoff from anywhere. Retrieve your current position in geodetic coordinates from 
+_In the starter code, we assume the drone takes off from map center, but you'll need to be able to takeoff from anywhere. Retrieve your current position in geodetic coordinates from 
 
 `self._latitude` 
 `self._longitude` 
 `self._altitude`
 
-Then use the utility function `global_to_local()` to convert to local position (using `self.global_home` as well, which you just set)
+Then use the utility function `global_to_local()` to convert to local position (using `self.global_home` as well, which you just set)_
 
 #### Answer: Retrieve current position
 Determine the local position relative to global home
@@ -54,7 +54,7 @@ Determine the local position relative to global home
         `local_position = numpy.array([north - north_home, east - east_home, -global_position[2]])`
         
 #### change start point
-In the starter code, the start point for planning is hardcoded as map center. Change this to be your current local position.
+_In the starter code, the start point for planning is hardcoded as map center. Change this to be your current local position._
 
 #### Answer: start point
 The previous rubrik retrieved the current position. Therefore the north start point = current_local_position - north_offset, 
@@ -65,10 +65,10 @@ and the east start point = current_local_position - east_offset
 
 
 #### Set goal position
-In the starter code, the goal position is hardcoded as some location 10 m north and 10 m east of map center. Modify this to be set as some arbitrary position on the grid given any geodetic coordinates (latitude, longitude)
+_In the starter code, the goal position is hardcoded as some location 10 m north and 10 m east of map center. Modify this to be set as some arbitrary position on the grid given any geodetic coordinates (latitude, longitude)_
 
 #### Answer: Set goal Position
-The goal can be any lat, lon within the map and have it rendered to a goal location on the grid.
+The goal can be any lat, lon rendered to a goal location on the grid.
 
 1. set latitude,   `goal_lat = float(37.796874)`
 2. set longitude,  `goal_lon = float(-122.399683)`
