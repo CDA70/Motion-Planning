@@ -1,20 +1,20 @@
-# RUBRIC Writeup
+## RUBRIC Writeup
 
 The writeup is an explanation of code changes and answers to Rubrik Questions to implement the FCND project, Motion Planning. 
 
-## 1. Explain the starter code.
+### 1. Explain the starter code.
 Test that motion_planning.py is a modified version of backyard_flyer_solution.py for simple path planning. Verify that both scripts work. Then, compare them side by side and describe in words how each of the modifications implemented in motion_planning.py is functioning.
 
 ### Answer:     
-- To start with. There are few more imports of packages in the new motion_planning, especially the planning_utils is useful as it provides the a_star and heuristic function used in the Motion_planning as to plan a path
+- To start with, a few more packages are imported in the new motion_planning, especially the planning_utils is useful as it provides the a_star and heuristic function used in the Motion_planning as to plan a path
 
 - Second the enumeration states are different, the motion planning provides one additional state, namely, PLANNING and all states have the value auto() instead of a default number. auto() means that an exact value is unimportant. 
 
-The video "Phases of Flight" explains the phases (states) in a comprehensive way. I hope that the image is an reasonable attempt to explain the difference between the backyard-flyer and the motion_planner. The biggest difference can be found with the extra state, PLANNING. The ideas is that we don't have to fly in a hard coded box, but instead we can define a start and goal and the search function will provide flight plan (see code ==>  plan_path ) 
+The video "Phases of Flight" explains the phases (states) in a good comprehensive way. I hope that the image is an reasonable attempt to explain the difference between the diferent states used in the backyard-flyer and the motion_planner. The biggest difference is found with the extra state, "PLANNING". The ideas is that we don't fly in a hard coded box, but instead we can define a "GOAL" and the search function will provide a flight plan (see code ==>  plan_path ) 
 ![planning phases](./misc/states/states.png)
 
-## 2. Implementing your planning Algorithm
-## Home Position
+### 2. Implementing your planning Algorithm
+### Home Position
 In the starter code, we assume that the home position is where the drone first initializes, but in reality you need to be able to start planning from anywhere. Modify your code to read the global home location from the first line of the colliders.csv file and set that position as global home (self.set_home_position())
 
 ### Answer: Home Position
@@ -27,7 +27,10 @@ In the starter code, we assume that the home position is where the drone first i
             
 - set global home ==> `self.set_home_position(lat0, lon0, 0)`
 
-## Retrieve current position
+Although the first line is split in a LAT LON, the float seems to truncate the last zero. Meaning `float(-122.397450)` is returned as `-122.39745`. in order to avoid this the latlon is hardcoded. I will investigate after the project submission how I can better extract the lat lon and convert it to a float where the trailing `0` is not truncated.
+
+
+### Retrieve current position
 In the starter code, we assume the drone takes off from map center, but you'll need to be able to takeoff from anywhere. Retrieve your current position in geodetic coordinates from 
 
 `self._latitude` 
@@ -74,3 +77,5 @@ The goal can be any lat, lon within the map and have it rendered to a goal locat
         `goal_position = global_to_local(goal, self.global_home)`
 5. and finally set the grid_goal with the offset included
         `grid_goal = (int(goal_position[0] + north_offset), int(goal_position[1] + east_offset))`
+
+        
