@@ -159,7 +159,7 @@ A medial path is returned with lots of waypoints, and in order to illimenate som
 In the path pruning `prune_path()`, 3 points are checked to see if the points are not in line. If the point are in line than the 2nd (middle) point is removed. We use a method called `collinearity()` with an epsilon to determine if points are close enough to consider to be in line.
 
 #### FINALLY Fly the path 
-The drone can fly accordingly the goal location provided above. My aim is to continue working on this project until I'm fully confident and can properly fly from building to building by selecting the goal location on a map instead of providing hard coded LATLON coordinates.
+The drone can fly according the provided goals above. My aim is to continue working on this project until I'm fully confident and can properly fly from building to building by selecting the goal location on a map instead of providing hard coded LATLON coordinates.
 
 
 
