@@ -5,12 +5,15 @@ from enum import Enum, auto
 
 import numpy as np
 
-from planning_utils import a_star, heuristic, create_grid
+from planning_utils import create_grid, a_star, heuristic, prune_path, find_start_goal
 from udacidrone import Drone
 from udacidrone.connection import MavlinkConnection
 from udacidrone.messaging import MsgID
 from udacidrone.frame_utils import global_to_local
+from udacidrone.frame_utils import local_to_global
 
+from skimage.morphology import medial_axis
+from skimage.util import invert
 
 class States(Enum):
     MANUAL = auto()
@@ -114,13 +117,13 @@ class MotionPlanning(Drone):
     def plan_path(self):
         self.flight_state = States.PLANNING
         print("Searching for a path ...")
-        TARGET_ALTITUDE = 5
+        TARGET_ALTITUDE = 10
         SAFETY_DISTANCE = 5
 
         self.target_position[2] = TARGET_ALTITUDE
 
         #----------------------------------------------------------------------------
-        # CDA: HOME POSITION
+        # HOME POSITION
         
         # TODO: read lat0, lon0 from colliders into floating point values
         # Open coliders.csv and read lat0 and lon0
@@ -128,46 +131,105 @@ class MotionPlanning(Drone):
 
         with open(colliders_file) as f:
             latlon = f.readline().strip().split(',')
-            lat0 = float(latlon[0].strip().strip('lat0'))
-            lon0 = float(latlon[1].strip().strip('lon0'))
-            
-        # TODO: set home position to (lat0, lon0, 0)
-        self.set_home_position(lat0, lon0, 0)
-        
-        # CDA: END HOME POSITION
+            lat0 = float(latlon[0].replace("lat0 ", ""))
+            lon0 = float(latlon[1].replace("lon0 ", ""))
+            print('lat: ', lat0)
+            print('lon: ', lon0)
+
+        # finished but latitude longitude are hardcoded for now: set home position to (lat0, lon0, 0)
+        # I have an issue where float() truncates the last 0 and therefore provides a different value 
+        #self.set_home_position(lon0, lat0, TARGET_ALTITUDE)
+        self.set_home_position(-122.397450, 37.792480, TARGET_ALTITUDE)
+        print('Home position is set to local position: ', self.local_position)
+        # END HOME POSITION
         #----------------------------------------------------------------------------
 
-        # TODO: retrieve current global position
- 
-        # TODO: convert to current local position using global_to_local()
-        
-        print('global home {0}, position {1}, local position {2}'.format(self.global_home, self.global_position,
-                                                                         self.local_position))
+        #----------------------------------------------------------------------------
+        # CURRENT POSITION
+        # finished: convert self.global_position to current local position using global_to_local()
+        current_global_position = [self._longitude, self._latitude, self._altitude]
+        print('current_global_position converted using global_to_local: {0}'.format(global_to_local(current_global_position,self.global_home)))
+        print('global home {0}, position {1}, local position {2}'.format(self.global_home, self.global_position, self.local_position))
+        # END CURRENT POSITION
+        #----------------------------------------------------------------------------
+
         # Read in obstacle map
         data = np.loadtxt('colliders.csv', delimiter=',', dtype='Float64', skiprows=2)
         
         # Define a grid for a particular altitude and safety margin around obstacles
-        grid, north_offset, east_offset = create_grid(data, TARGET_ALTITUDE, SAFETY_DISTANCE)
+        #grid, north_offset, east_offset = create_grid(data, TARGET_ALTITUDE, SAFETY_DISTANCE)
+        #skeleton = medial_axis(invert(grid))
+        #print("North offset = {0}, east offset = {1}".format(north_offset, east_offset))
+        # create_grid_and_edges uses Voronoi, it is slower than the previous create_grid() but it's suppose to create a safer path
+        grid, edges, north_offset, east_offset = create_grid_and_edges(data, TARGET_ALTITUDE, SAFETY_DISTANCE)
+        skeleton = medial_axis(invert(grid))
         print("North offset = {0}, east offset = {1}".format(north_offset, east_offset))
+        
+        #----------------------------------------------------------------------------
+        # START POINT
         # Define starting point on the grid (this is just grid center)
-        grid_start = (-north_offset, -east_offset)
-        # TODO: convert start position to current position rather than map center
+        # start_position = (-north_offset, -east_offset)
         
+        # finished: convert start position to current position rather than map center
+        grid_start = (-north_offset + int(self.local_position[0]), -east_offset + int(self.local_position[1]))
+        print('start: ', grid_start)
+        # END START POINT
+        #----------------------------------------------------------------------------
+        
+        #----------------------------------------------------------------------------
+        # SET GOAL POINT
         # Set goal as some arbitrary position on the grid
-        grid_goal = (-north_offset + 10, -east_offset + 10)
-        # TODO: adapt to set goal as latitude / longitude position and convert
+        #grid_goal = (-north_offset + 10, -east_offset + 10)
+        # finished: adapt to set goal as latitude / longitude position and convert
+        # some lat lon that are working
+        # first path
+        goal_lat = float(37.795240)
+        goal_lon = float(-122.393136)
 
-        # Run A* to find a path from start to goal
-        # TODO: add diagonal motions with a cost of sqrt(2) to your A* implementation
+        # second path
+        #goal_lat = float(37.796874)
+        #goal_lon = float(-122.399683)
+
+        # third path
+        #goal_lat = float(37.793155)
+        #goal_lon = float(-122.402035)
+
+        # fourth path and back to center
+        #goal_lat = float(37.792480)
+        #goal_lon = float(-122.397450)
+
+        goal_position = global_to_local((goal_lon,goal_lat,0),self.global_home)
+        print('goal position converted using global_to_local: {0}'.format(global_to_local((goal_lon,goal_lat,0),self.global_home)))
+
+        grid_goal = (-north_offset + int(goal_position[0]), -east_offset + int(goal_position[1]))
+        # END START POINT
+        #----------------------------------------------------------------------------
+
+        #----------------------------------------------------------------------------
+        # RUN A* USING MEDIAN PATH AND COST OF SQRT(2)
+        #Run A* to find a path from start to goal
+        # finished: add diagonal motions with a cost of sqrt(2) to your A* implementation
         # or move to a different search space such as a graph (not done here)
-        print('Local Start and Goal: ', grid_start, grid_goal)
-        path, _ = a_star(grid, heuristic, grid_start, grid_goal)
+        skel_start, skel_goal = find_start_goal(skeleton, grid_start, grid_goal)
+
+        print('original start and goal: ',grid_start, grid_goal)
+        print('calibrated start and goal on skeleton: ', skel_start, skel_goal)
         
-        # TODO: prune path to minimize number of waypoints
-        # TODO (if you're feeling ambitious): Try a different approach altogether!
+        median_path, cost = a_star(invert(skeleton).astype(np.int), 
+                            heuristic, 
+                            tuple(skel_start), 
+                            tuple(skel_goal))
+        print('Median path and cost: ', len(median_path))
+
+        pruned_path = prune_path(median_path)
+        print('pruned path and cost: ', len(pruned_path))
+        # END RUN A*
+        #----------------------------------------------------------------------------
 
         # Convert path to waypoints
-        waypoints = [[p[0] + north_offset, p[1] + east_offset, TARGET_ALTITUDE, 0] for p in path]
+        #waypoints = [[p[0] + north_offset, p[1] + east_offset, TARGET_ALTITUDE, 0] for p in pruned_path]
+        waypoints = [[p[0] + north_offset, p[1] + east_offset, TARGET_ALTITUDE, 0] for p in pruned_path]
+        print(waypoints)
         # Set self.waypoints
         self.waypoints = waypoints
         # TODO: send waypoints to sim
