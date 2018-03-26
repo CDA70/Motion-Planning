@@ -156,13 +156,13 @@ class MotionPlanning(Drone):
         data = np.loadtxt('colliders.csv', delimiter=',', dtype='Float64', skiprows=2)
         
         # Define a grid for a particular altitude and safety margin around obstacles
-        #grid, north_offset, east_offset = create_grid(data, TARGET_ALTITUDE, SAFETY_DISTANCE)
-        #skeleton = medial_axis(invert(grid))
-        #print("North offset = {0}, east offset = {1}".format(north_offset, east_offset))
-        # create_grid_and_edges uses Voronoi, it is slower than the previous create_grid() but it's suppose to create a safer path
-        grid, edges, north_offset, east_offset = create_grid_and_edges(data, TARGET_ALTITUDE, SAFETY_DISTANCE)
+        grid, north_offset, east_offset = create_grid(data, TARGET_ALTITUDE, SAFETY_DISTANCE)
         skeleton = medial_axis(invert(grid))
         print("North offset = {0}, east offset = {1}".format(north_offset, east_offset))
+        # create_grid_and_edges uses Voronoi, it is slower than the previous create_grid() but it's suppose to create a safer path
+        #grid, edges, north_offset, east_offset = create_grid_and_edges(data, TARGET_ALTITUDE, SAFETY_DISTANCE)
+        #skeleton = medial_axis(invert(grid))
+        #print("North offset = {0}, east offset = {1}".format(north_offset, east_offset))
         
         #----------------------------------------------------------------------------
         # START POINT

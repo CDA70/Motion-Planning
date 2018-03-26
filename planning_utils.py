@@ -52,6 +52,7 @@ def create_grid(data, drone_altitude, safety_distance):
 
     return grid, int(north_min), int(east_min)
 
+
 def create_grid_and_edges(data, drone_altitude, safety_distance):
     """
     Returns a grid representation of a 2D configuration space
